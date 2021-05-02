@@ -1,3 +1,5 @@
+//REMEMBER TO CREDIT ME
+
 #using scripts\shared\util_shared;
 #using scripts\shared\callbacks_shared;
 #using scripts\zm\_zm_score;
@@ -9,7 +11,7 @@ function init()
     level.shootables = getentarray("shootable", "targetname");
     level.count = 0;
     level.needed = level.shootables.size;
-    level.points = 10;
+    level.points = 10; //Change total amount of points awarded per shootable here!!!! Set to 0 if you do not want to give points.
     
     foreach(shootable in level.shootables)
     {
@@ -42,7 +44,7 @@ function j_shootable_logic()
     if (level.count === level.needed) {
             foreach(player in GetPlayers())
             {
-                player give_all_perks();
+                player give_all_perks(); // Add // just before player to disable a perkaholic reward: "//player give_all_perks();"
             }
     }
 }
