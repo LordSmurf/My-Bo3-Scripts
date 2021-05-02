@@ -1,3 +1,5 @@
+//REMEMBER TO CREDIT ME: JULES
+
 #using scripts\shared\array_shared;
 #using scripts\shared\util_shared;
 #using scripts\shared\callbacks_shared;
