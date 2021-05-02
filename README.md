@@ -8,6 +8,6 @@ Current Scripts Available<br/><br/>
 | Collectable EE| Easy            |
 
 <br/><br/>
-## Scripts I am working on:
+<h1 align="center">Scripts I am working on:</h1>
 [ ] N/A<br/>
 [ ] N/A<br/>
