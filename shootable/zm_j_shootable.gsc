@@ -1,56 +1,46 @@
-//REMEMBER TO CREDIT ME
+//REMEMBER TO CREDIT ME: JULES
+//SHOUTOUT TO VERTASEA FOR MASSIVE BUG FIXING
 
 #using scripts\shared\util_shared;
 #using scripts\shared\callbacks_shared;
 #using scripts\zm\_zm_score;
-#using scripts\zm\_zm_perks;
+#using scripts\zm\_zm_utility;
+#using scripts\shared\array_shared;
 
 function init()
 {
-    level.shootables = getentarray("shootable", "targetname");
-    level.count = 0;
-    level.needed = level.shootables.size;
-    level.points = 10; //Change total amount of points awarded per shootable here!!!! Set to 0 if you do not want to give points.
-    
-    foreach(shootable in level.shootables)
-    {
-        shootable thread j_shootable_logic();
-    }    
-}
-//IceGrenade Func
-function give_all_perks()
-{
-    a_str_perks = GetArrayKeys( level._custom_perks );
-    foreach( str_perk in a_str_perks )
-    {
-        if( !self HasPerk( str_perk ) )
-        {
-            self zm_perks::give_perk( str_perk, false );
-            if (isdefined(level.perk_bought_func))
-                self [[ level.perk_bought_func ]]( str_perk );
-        }
-    }
+    level.reward_points = 10;
+    shootables = GetEntArray("shootable", "targetname");
+    level.total_shootables = shootables.size;
+    array::thread_all(shootables, &j_shootable_logic);
+
+    level thread give_players_reward();
 }
 
-function j_shootable_logic()
+function j_shootable_logic() // self == shootable
 {
-    self setCanDamage( true );
-    self waittill( "damage", damage, attacker, dir, point, mod, model, tag, part, weapon, flags, inflictor, chargeLevel );
+    self SetCanDamage( true );
+
+    // self waittill( "damage", damage, attacker, direction_vec, point, mod );
+    self waittill("damage", amount, inflictor, direction, point, type, tagName, modelName, partName, weapon);
+
     PlayFX(level._effect["powerup_grabbed"], self.origin);
     self Delete();
+    level.total_shootables--;
+
+    inflictor zm_score::add_to_player_score( level.reward_points );
+
+    IPrintLnBold("total shootables shot = " + level.shootables_shot);
+    IPrintLnBold("total shootable ents = " + level.total_shootables);
+
+    if(level.total_shootables <= 0)
+        level notify("all_shootables_shot");
+}
+
+function give_players_reward()
+{
+    level waittill("all_shootables_shot");
     
-    if (inflictor) {
-        level.count += 1;
-        inflictor zm_score::add_to_player_score( level.points );
-    } else {
-        level.count += 1;
-        attacker zm_score::add_to_player_score( level.points );
-    }
-    
-    if (level.count === level.needed) {
-            foreach(player in GetPlayers())
-            {
-                player give_all_perks(); // Add // just before player to disable a perkaholic reward: "//player give_all_perks();"
-            }
-    }
+    foreach( player in GetPlayers())
+        player zm_utility::give_player_all_perks();
 }
