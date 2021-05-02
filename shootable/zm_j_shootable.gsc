@@ -30,9 +30,6 @@ function j_shootable_logic() // self == shootable
 
     inflictor zm_score::add_to_player_score( level.reward_points );
 
-    IPrintLnBold("total shootables shot = " + level.shootables_shot);
-    IPrintLnBold("total shootable ents = " + level.total_shootables);
-
     if(level.total_shootables <= 0)
         level notify("all_shootables_shot");
 }
