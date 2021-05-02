@@ -4,7 +4,6 @@
 #using scripts\shared\callbacks_shared;
 #using scripts\zm\_zm_score;
 #using scripts\zm\_zm_perks;
-#using scripts\zm\_zm_score;
 
 function init()
 {
@@ -36,12 +35,18 @@ function give_all_perks()
 function j_shootable_logic()
 {
     self setCanDamage( true );
-    self waittill("damage", amount, attacker, dir, p, type);
+    self waittill( "damage", damage, attacker, dir, point, mod, model, tag, part, weapon, flags, inflictor, chargeLevel );
     PlayFX(level._effect["powerup_grabbed"], self.origin);
     self Delete();
-    level.count += 1;
-    attacker zm_score::add_to_player_score( level.points );
-
+    
+    if (inflictor) {
+        level.count += 1;
+        inflictor zm_score::add_to_player_score( level.points );
+    } else {
+        level.count += 1;
+        attacker zm_score::add_to_player_score( level.points );
+    }
+    
     if (level.count === level.needed) {
             foreach(player in GetPlayers())
             {
