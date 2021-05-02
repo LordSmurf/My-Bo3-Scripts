@@ -37,6 +37,7 @@ function j_shootable_logic()
 {
     self setCanDamage( true );
     self waittill("damage", amount, attacker, dir, p, type);
+    PlayFX(level._effect["powerup_grabbed"], self.origin);
     self Delete();
     level.count += 1;
     attacker zm_score::add_to_player_score( level.points );
